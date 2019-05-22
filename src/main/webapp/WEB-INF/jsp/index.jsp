@@ -64,10 +64,6 @@
 							</c:choose>
 							<td>￥${flightData.flights.reference_pric}<br><input onclick="queryTickets(${flightData.flights.id})" type="button" value="查询机票"></td>
 						</tr>
-						<tr id=${flightData.flights.id} style="display: none">
-						</tr>
-						<tr id=${flightData.flights.id }${"_1"} style="display: none">
-						</tr>
 					</c:forEach>
 				</c:when>
 				<c:when test="${empty flightDatas}">
