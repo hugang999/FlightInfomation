@@ -1,9 +1,13 @@
 package com.hugang.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.enterprise.inject.New;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hugang.dto.FlightData;
 import com.hugang.dto.Result;
 import com.hugang.entity.Airports;
+import com.hugang.entity.Flight_tickets;
 import com.hugang.entity.Flights;
 import com.hugang.service.IAirportsService;
 import com.hugang.service.IFlight_ticketsService;
@@ -49,13 +55,18 @@ public class FlightsController {
 		List<Flights> flights = flightsService.queryByCondition(CommonFunc.toString(map.get("flight_date")), CommonFunc.toString(map.get("tak_airport_name")), CommonFunc.toString(map.get("landing_airport_name")));
 		//根据查出的航班信息，查询起飞和降落机场信息
 		for (Flights flight : flights) {
-			flight.setTake_time(flight.getTake_time().split(" ")[1]);
-			flight.setLanding_time(flight.getLanding_time().split(" ")[1]);
-			Airports airports = airportsService.queryAirportsById(CommonFunc.toString(flight.getTak_airport_id()));
-			String tak_airport_name1 = airports.getAirport_name();
-			airports = airportsService.queryAirportsById(CommonFunc.toString(flight.getLanding_airport_id()));
-			String landing_airport_name1 = airports.getAirport_name();
-			flightDatas.add(new FlightData(flight, tak_airport_name1, landing_airport_name1));
+			try {
+				
+				flight.setTake_time(new SimpleDateFormat("HH:mm").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(flight.getTake_time())));
+				flight.setLanding_time(new SimpleDateFormat("HH:mm").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(flight.getLanding_time())));
+				Airports airports = airportsService.queryAirportsById(CommonFunc.toString(flight.getTak_airport_id()));
+				String tak_airport_name1 = airports.getAirport_name();
+				airports = airportsService.queryAirportsById(CommonFunc.toString(flight.getLanding_airport_id()));
+				String landing_airport_name1 = airports.getAirport_name();
+				flightDatas.add(new FlightData(flight, tak_airport_name1, landing_airport_name1));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		model.addAttribute("flightDatas", flightDatas);
 		model.addAttribute("flight_date", flight_date);
@@ -67,5 +78,12 @@ public class FlightsController {
 	@RequestMapping(value="/index")
 	public String index() {
 		return "index";
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/queryTicketByFlightId")
+	@ResponseBody
+	public Result queryTicketById(@RequestParam String flightId) {
+		List<Flight_tickets> res = flight_ticketsService.queryFlight_ticketsById(flightId);
+		return Result.success(res);
 	}
 }
