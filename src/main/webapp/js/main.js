@@ -10,15 +10,15 @@ function queryTickets(id) {
 		data : null,
 		success : function(result){
 			var insHtml = "";
+			$("#" + id + "noDataId").remove();
 			if(result.data.length > 0){
-				$("#noDataId").remove();
 				$(result.data).each(function(n,d) {
 					//拼接表格
 					insHtml +='<tr style="background:#CDB38B" id=' + d.id + '><td colspan=\"2\">'+ d.sell_company +'</td><td colspan=\"2\">￥'+ d.ticket_price +'</td></tr>';
 					$("#"+d.id).remove();
 				});
 			} else {
-				insHtml = '<tr id="noDataId"><td colspan=\"6\">未查询到机票信息</td></tr>'
+				insHtml = '<tr id="'+id+'noDataId"><td colspan=\"6\">未查询到机票信息</td></tr>'
 			}
 			tr.after(insHtml);
 		}

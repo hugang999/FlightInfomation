@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hugang.dao.Flight_ticketsDao;
 import com.hugang.entity.Flight_tickets;
@@ -16,6 +17,7 @@ public class Flight_ticketsService implements IFlight_ticketsService {
 	Flight_ticketsDao flight_ticketsDao;
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Flight_tickets> queryFlight_ticketsById(String flightId) {
 		return flight_ticketsDao.queryFlight_ticketsById(flightId);
 	}

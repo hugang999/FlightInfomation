@@ -45,6 +45,7 @@
 	<!-- 配置sessionfactory -->
 	<bean id="sqlSessionFactory"
 		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:conf/mybatis-config.xml" />  
 		<property name="dataSource" ref="dataSource"></property>
 		<!-- 自动扫描mapper文件 -->
 		<property name="mapperLocations"

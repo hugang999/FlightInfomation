@@ -27,4 +27,7 @@
    
    <!-- 3、自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器  -->
    <context:component-scan base-package="com.hugang.controller"/>
+   
+   <!-- 解决静态资源无法被springMVC处理的问题 -->
+   <mvc:default-servlet-handler />
 </beans>
