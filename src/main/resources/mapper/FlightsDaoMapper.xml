@@ -3,10 +3,18 @@
 <mapper namespace="com.hugang.dao.FlightsDao">
 	<select id="queryByCondition"
 		resultType="com.hugang.entity.Flights">
-		select * from flights where flight_date =
-		to_date(#{flight_date}, 'yyyy-mm-dd') and tak_airport_id = (select id
+		<!-- oracle版本的sql -->
+		<!-- select * from flights where flight_date =
+		to_date(#{flight_date}, 'yyyy-mm-dd') and tak_airport_id in (select id
 		from airports where city_name = #{tak_airport_name}) and
-		landing_airport_id = (select id from airports where city_name =
+		landing_airport_id in (select id from airports where city_name =
+		#{landing_airport_name}) order by take_time -->
+		
+		<!-- mysql版本的sql -->
+		select * from flights where flight_date =
+		#{flight_date} and tak_airport_id in (select id
+		from airports where city_name = #{tak_airport_name})  and
+		landing_airport_id in (select id from airports where city_name =
 		#{landing_airport_name}) order by take_time 
 	</select>
 </mapper>
